@@ -53,4 +53,41 @@ public class CountryController {
 
         return new ResponseEntity<>(rtnList, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/population/total", produces = {"application/json"})
+    public ResponseEntity<?> totalPopulation() {
+        List<Country> countryList = new ArrayList<>();
+
+        countryrepo.findAll().iterator().forEachRemaining(countryList::add);
+
+        long total = 0;
+        for (Country c : countryList) {
+            total += c.getPopulation();
+        }
+
+        System.out.println("The Total Population is " + total);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/population/min", produces = {"application/json"})
+    public ResponseEntity<?> minPopulation() {
+        List<Country> countryList = new ArrayList<>();
+
+        countryrepo.findAll().iterator().forEachRemaining(countryList::add);
+
+        countryList.sort((c1, c2) -> (int) c1.getPopulation() - (int) c2.getPopulation());
+
+        return new ResponseEntity<>(countryList.get(0), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/population/max", produces = {"application/json"})
+    public ResponseEntity<?> maxPopulation() {
+        List<Country> countryList = new ArrayList<>();
+
+        countryrepo.findAll().iterator().forEachRemaining(countryList::add);
+
+        countryList.sort((c1, c2) -> (int) c2.getPopulation() - (int) c1.getPopulation());
+
+        return new ResponseEntity<>(countryList.get(0), HttpStatus.OK);
+    }
 }
